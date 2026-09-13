@@ -9,7 +9,11 @@ webpush.setVapidDetails(
 );
 
 const handler = async () => {
-  const store = getStore('daily-thread-subscriptions');
+  const store = getStore({
+    name: 'daily-thread-subscriptions',
+    siteID: process.env.BLOBS_SITE_ID,
+    token: process.env.BLOBS_TOKEN
+  });
   const { blobs } = await store.list();
   const now = Date.now();
 
