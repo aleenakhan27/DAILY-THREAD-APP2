@@ -45,9 +45,12 @@ const handler = async () => {
           await webpush.sendNotification(
             subscription,
             JSON.stringify({
-              title: 'Time for: ' + r.label,
-              body: r.displayTime ? 'Scheduled for ' + r.displayTime : 'Daily Thread reminder'
-            })
+              id: r.id,
+              title: '\u23f0 ' + r.label,
+              body: r.displayTime ? 'Scheduled for ' + r.displayTime : 'Daily Thread reminder',
+              actions: [{ action: 'snooze', title: 'Snooze 10 min' }]
+            }),
+            { urgency: 'high', TTL: 60 }
           );
         } catch (err) {
           if (err.statusCode === 404 || err.statusCode === 410) {
