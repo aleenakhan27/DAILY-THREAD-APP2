@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daily-thread-v4';
+const CACHE_NAME = 'daily-thread-v5';
 const FILES_TO_CACHE = ['./index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (event) => {
@@ -32,6 +32,7 @@ self.addEventListener('push', (event) => {
       vibrate: [400, 200, 400, 200, 400, 200, 400],
       requireInteraction: true,
       renotify: true,
+      silent: false,
       tag: 'daily-thread-alarm'
     })
   );
