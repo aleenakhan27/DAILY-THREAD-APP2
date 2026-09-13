@@ -1,3 +1,4 @@
+const { schedule } = require('@netlify/functions');
 const { getStore } = require('@netlify/blobs');
 const webpush = require('web-push');
 
@@ -7,7 +8,7 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY
 );
 
-exports.handler = async () => {
+const handler = async () => {
   const store = getStore('daily-thread-subscriptions');
   const { blobs } = await store.list();
   const now = Date.now();
@@ -62,6 +63,4 @@ exports.handler = async () => {
   return { statusCode: 200, body: 'ok' };
 };
 
-exports.config = {
-  schedule: '* * * * *'
-};
+exports.handler = schedule('* * * * *', handler);
