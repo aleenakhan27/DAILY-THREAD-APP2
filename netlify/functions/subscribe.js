@@ -15,7 +15,11 @@ exports.handler = async (event) => {
     }
 
     const key = crypto.createHash('sha256').update(subscription.endpoint).digest('hex');
-    const store = getStore('daily-thread-subscriptions');
+    const store = getStore({
+      name: 'daily-thread-subscriptions',
+      siteID: process.env.BLOBS_SITE_ID,
+      token: process.env.BLOBS_TOKEN
+    });
 
     const now = Date.now();
     const preparedReminders = (reminders || []).map((r) => {
