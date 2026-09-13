@@ -506,6 +506,18 @@ function urlBase64ToUint8Array(base64String){
   return outputArray;
 }
 
+function prepareItemsForSync(list){
+  return list.map((item) => {
+    if(item.type === 'once'){
+      return { ...item, fireAt: nextFireAtFor(item.hour, item.minute) };
+    }
+    if(item.type === 'repeat'){
+      return { ...item, nextFireAt: Date.now() + item.everyMs };
+    }
+    return item;
+  });
+}
+
 async function syncSubscription(){
   try{
     if(!('serviceWorker' in navigator)) return;
@@ -515,7 +527,7 @@ async function syncSubscription(){
     await fetch('/.netlify/functions/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subscription, reminders: items })
+      body: JSON.stringify({ subscription, reminders: prepareItemsForSync(items) })
     });
   }catch(e){
     console.error('Could not sync reminders to server', e);
@@ -545,7 +557,7 @@ notifBtn.addEventListener('click', async () => {
     await fetch('/.netlify/functions/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ subscription, reminders: items })
+      body: JSON.stringify({ subscription, reminders: prepareItemsForSync(items) })
     });
     statusLine.textContent = 'Reminders are on — you\u2019ll be notified even if the app is closed.';
     statusLine.className = 'status-line ok';
